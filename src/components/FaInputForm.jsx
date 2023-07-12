@@ -9,21 +9,24 @@ const FaInputForm = ({ state, setState }) => {
     }));
   }
 
-  function handleOnSelect(e) {
-    const selectedEndStates = e.map((state) => state.name).join(",");
+  function handleOnSelect(e,type) {
+    const selectedStates = e.map((state) => state.name).join(",");
+
+    if(type === 'start'){
+      setState((prevState) => ({
+        ...prevState,
+        startState: selectedStates,
+      }));
+      return;
+    }
+
     setState((prevState) => ({
       ...prevState,
-      endStates: selectedEndStates,
+      endStates: selectedStates,
     }));
+
   }
 
-  function handleOnSelectSingle(e) {
-    const selectedStartState = e[0].name;
-    setState((prevState) => ({
-      ...prevState,
-      startState: selectedStartState,
-    }));
-  }
 
   const selectData = state.states.split(",").map((state) => {
     return { name: state, id: state };
@@ -45,33 +48,20 @@ const FaInputForm = ({ state, setState }) => {
       </div>
       <div className="flex flex-col gap-2 mt-5">
         <label htmlFor="startState" className="font-bold text-green-700">Start State</label>
-        {/* <select
-          name="startState"
-          value={state.startState}
-          onChange={handleChangeState}
-          className="px-2 py-2 rounded border border-black"
-        >
-          {state.states.split(",").map((state) => (
-            <>
-              <option value={state}>{state}</option>
-            </>
-          ))}
-        </select> */}
 
         <Multiselect
-          singleSelect={true}
           placeholder="Select Start State"
           className="rounded border border-black"
           options={selectData}
           name="endStates"
           displayValue="name"
-          onSelect={handleOnSelectSingle} // Function will trigger on select event
-          onRemove={handleOnSelectSingle} // Function will trigger on remove event
+          onSelect={(e) => handleOnSelect(e,'start')} // Function will trigger on select event
+          onRemove={(e) => handleOnSelect(e,'start')} // Function will trigger on remove event
         />
+
       </div>
       <div className="flex flex-col gap-2 mt-5">
         <label htmlFor="endStates" className="font-bold text-green-700">End States</label>
-
         <Multiselect
           searchable={true}
           placeholder="Select End States"
@@ -79,8 +69,8 @@ const FaInputForm = ({ state, setState }) => {
           options={selectData}
           name="endStates"
           displayValue="name"
-          onSelect={handleOnSelect} // Function will trigger on select event
-          onRemove={handleOnSelect} // Function will trigger on remove event
+          onSelect={(e) => handleOnSelect(e,'end')} // Function will trigger on select event
+          onRemove={(e) => handleOnSelect(e,'end')} // Function will trigger on remove event
         />
       </div>
       <div className="flex flex-col gap-2 mt-5">
