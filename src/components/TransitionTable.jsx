@@ -8,6 +8,8 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
     return { name: state, id: state };
   });
 
+  selectData.push({ name: "ε", id: "ε" });
+
   function handleOnSelect(e, id, state, alphabet) {
     const value = e.map((state) => state.name).join(",");
     let isOld = false;
@@ -43,7 +45,7 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
     if (alphabet === "") return null;
     return (
       <>
-        <th className="border border-slate-600 p-3">{alphabet}</th>
+        <th className="border border-blue-500 p-3">{alphabet}</th>
       </>
     );
   });
@@ -53,7 +55,7 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
     return (
       <>
         <tr>
-          <td className="border border-slate-600 px-3 py-2 font-bold">
+          <td className="border border-blue-500 px-3 py-2 font-bold  text-center">
             {startState == state && (
               <span className="text-green-600">&#10145;</span>
             )}
@@ -65,18 +67,7 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
           {alphabets.map((alphabet) => {
             return (
               <>
-                <td className="border border-slate-600 px-3 py-2">
-                  {/* <input
-                    placeholder={`${state}${alphabet}`}
-                    name={`${state}${alphabet}`}
-                    onChange={(e) =>
-                      handleOnChangeTransition(e, `${state}${alphabet}`)
-                    }
-                    value={transitions[`"${state}${alphabet}"`]}
-                    type="text"
-                    className="h-full w-full outline-0"
-                  /> */}
-
+                <td className="border border-blue-500 px-3 py-2">
                   <Multiselect
                     key={`${state}${alphabet}`}
                     placeholder={`${state}${alphabet}`}
@@ -97,40 +88,14 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
       </>
     );
   });
-  //     if (state === "") return null;
-  //     return (
-  //       <>
-  //         <tr>
-  //           <td className="border border-slate-600 px-3 py-2"><span className="text-red-600">*</span>{state}</td>
-  //           {alphabets.map((alphabet) => {
-  //             return (
-  //               <>
-  //                 <td className="border border-slate-600 px-3 py-2">
-  //                   <input
-  //                     placeholder={`${state}${alphabet}`}
-  //                     name={`${state}${alphabet}`}
-  //                     onChange={(e) =>
-  //                       handleOnChangeTransition(e, `${state}${alphabet}`)
-  //                     }
-  //                     value={transitions[`"${state}${alphabet}"`]}
-  //                     type="text"
-  //                     className="h-full w-full outline-0"
-  //                   />
-  //                 </td>
-  //               </>
-  //             );
-  //           })}
-  //         </tr>
-  //       </>
-  //     );
-  //   });
+
 
   return (
-    <div className="p-4 w-full my-5 scroll-bar overflow-x-auto ">
-      <table className="border-collapse border border-slate-500 min-w-full h-full">
-        <thead className="bg-white border-b text-left">
+    <div className="w-full my-5 scroll-bar overflow-x-auto mt-10 shadow-xl">
+      <table className="border-collapse min-w-full h-full border">
+        <thead className="bg-white border-b">
           <tr>
-            <th className="border border-slate-600 p-3 text-center text-green-700">
+            <th className="border border-blue-500 p-3 text-center text-orange-400">
               Transition
             </th>
             {tableHeader}
