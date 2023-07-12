@@ -27,31 +27,29 @@ const FaInputForm = ({ state, setState }) => {
 
   }
 
-
   const selectData = state.states.split(",").map((state) => {
     return { name: state, id: state };
   });
 
-
   return (
-    <div className="p-4">
-      <div className="flex flex-col gap-2 mt-5">
-        <label htmlFor="states" className="font-bold text-green-700">States</label>
+    <div className="shadow-xl p-5 rounded border mt-5">
+      <div className="flex flex-col gap-2">
+        <label htmlFor="states" className="font-bold text-orange-400">States</label>
         <input
           name="states"
           type="text"
           placeholder="States (eg: q0,q1,q2...)"
-          className="px-2 py-2 rounded border border-black"
+          className="px-2 py-2 rounded border-2 outline-none border-gray-300"
           value={state.states}
           onChange={handleChangeState}
         />
       </div>
       <div className="flex flex-col gap-2 mt-5">
-        <label htmlFor="startState" className="font-bold text-green-700">Start State</label>
+        <label htmlFor="startState" className="font-bold text-orange-400">Start State</label>
 
         <Multiselect
           placeholder="Select Start State"
-          className="rounded border border-black"
+          className="rounded border border-gray-300"
           options={selectData}
           name="endStates"
           displayValue="name"
@@ -61,11 +59,11 @@ const FaInputForm = ({ state, setState }) => {
 
       </div>
       <div className="flex flex-col gap-2 mt-5">
-        <label htmlFor="endStates" className="font-bold text-green-700">End States</label>
+        <label htmlFor="endStates" className="font-bold text-orange-400">End States</label>
         <Multiselect
           searchable={true}
           placeholder="Select End States"
-          className="rounded border border-black"
+          className="rounded border border-gray-300"
           options={selectData}
           name="endStates"
           displayValue="name"
@@ -74,12 +72,12 @@ const FaInputForm = ({ state, setState }) => {
         />
       </div>
       <div className="flex flex-col gap-2 mt-5">
-        <label htmlFor="alphabets" className="font-bold text-green-700">Alphabets</label>
+        <label htmlFor="alphabets" className="font-bold text-orange-400">Alphabets</label>
         <input
           name="alphabets"
           type="text"
           placeholder="Alphabets (eg: a,b,c or 1,0)"
-          className="px-2 py-2 rounded border border-black"
+          className="px-2 py-2 rounded border-2 outline-none border-gray-300"
           value={state.alphabets}
           onChange={handleChangeState}
         />

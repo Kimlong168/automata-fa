@@ -1,13 +1,13 @@
-import cadt from '../assets/cadt.webp'
-
+// import cadt from '../assets/cadt.webp'
+import logo from '../assets/logo.png'
 const Header = () => {
   return (
-    <div className="flex justify-between gap-3 items-center p-4 shadow-xl">
+    <div className="flex justify-between gap-3 items-center p-6 md:px-12  shadow-xl">
         <div>
-            <img className="h-[40px]" src={cadt} alt="cadt" />
+            <img className="h-[40px]" src={logo} alt="cadt" />
         </div>
         <div>
-            <h1 className="font-bold text-xl">Automata(FA)</h1>
+            <h1 className="font-bold text-xl text-blue-900">Automata(FA)</h1>
         </div>
     </div>
   )

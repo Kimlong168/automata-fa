@@ -13,7 +13,7 @@ const DisplayState = ({ state, transitions }) => {
   });
 
   return (
-    <div className="p-4">
+    <div>
       <div className="text-xl font-bold my-5 ">Summary</div>
       <h1>States: {state.states}</h1>
       <h1>Start State: {state.startState}</h1>
