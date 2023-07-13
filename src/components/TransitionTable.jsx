@@ -9,6 +9,7 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
   });
 
   selectData.push({ name: "ε", id: "ε" });
+  selectData.push({ name: "∅", id: "∅" });
 
   function handleOnSelect(e, id, state, alphabet) {
     const value = e.map((state) => state.name).join(",");
@@ -65,6 +66,24 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
             {state}
           </td>
           {alphabets.map((alphabet) => {
+            //to make transition table change when we change states or alphabets (set transition to empty)
+            let transitionArr = transitions.find(
+              // find the transition for this state and alphabet
+              (transition) => transition.id === `${state}${alphabet}`
+            );
+
+            if (!transitionArr) {
+              transitionArr = [];
+            } else if (transitionArr.transition === "") {
+              transitionArr = [];
+            } else {
+              transitionArr = transitionArr.transition
+                .split(",")
+                .map((state) => {
+                  return { name: state, id: state };
+                });
+            }
+
             return (
               <>
                 <td
@@ -72,6 +91,7 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
                   key={`${state}${alphabet}`}
                 >
                   <Multiselect
+                    selectedValues={transitionArr}
                     placeholder={`${state}${alphabet}`}
                     options={selectData}
                     displayValue="name"
