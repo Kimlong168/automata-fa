@@ -14,9 +14,8 @@ export default function App() {
     states: "",
     alphabets: "",
   });
-  const [isDFA, setIsDFA] = useState(true);
+  const [isDFA, setIsDFA] = useState(null);
   const [string, setString] = useState("");
-
   const [transitions, setTransitions] = useState([]);
 
   console.log("transitions: ", transitions);
@@ -28,34 +27,44 @@ export default function App() {
 
   // feature to check wheater FA is the DFA or NFA
   function checkFAType() {
+    let alertDFA = true;
     // check if there is any empty field
     if (state.states === "" || state.alphabets === "") {
       alert("Please fill all the fields");
       return;
     }
 
-    // check if start state is empty
     if (state.startState === "") {
+      // check if start state is empty
       alert("Please fill the start state");
       return;
     }
 
-    // check if end states is empty
     if (state.endStates === "") {
+      // check if end states is empty
       alert("Please fill the end states.");
       return;
     }
 
-    // check if start is more than one
     if (startState.length > 1) {
+      // check if start is more than one
       setIsDFA(false);
+      alertDFA = false;
       alert("This is Fa is a NFA. because it has more than one start state");
       return;
     }
 
     // check if there is any empty transition
-    if (transitions.length < states.length * alphabets.length) {
+    let transitionCount = 0;
+    transitions.forEach((transition) => {
+      if (transition.transition !== "") {
+        transitionCount++;
+      }
+    });
+
+    if (transitionCount < states.length * alphabets.length) {
       setIsDFA(false);
+      alertDFA = false;
       alert("This is Fa is a NFA. because it includes empty transition");
       return;
     }
@@ -64,13 +73,28 @@ export default function App() {
     transitions.forEach((transition) => {
       if (transition.transition.includes("ε")) {
         setIsDFA(false);
+        alertDFA = false;
         alert("This is Fa is a NFA. because it includes ε");
         return;
       }
     });
 
-    if (isDFA) {
+    // check if the transitions include more than one transition for a state and alphabet
+    transitions.forEach((transition) => {
+      const result = transition.transition.split(",");
+      if (result.length > 1) {
+        setIsDFA(false);
+        alertDFA = false;
+        alert(
+          "This is Fa is a NFA. because it includes more than one transition for a state and alphabet"
+        );
+        return;
+      }
+    });
+
+    if (alertDFA) {
       alert("This is Fa is a DFA");
+      setIsDFA(true);
     }
   }
 

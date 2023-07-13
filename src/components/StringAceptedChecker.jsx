@@ -16,14 +16,22 @@ const StringAceptedChecker = ({ checkString, string, setString, isDFA }) => {
         className="py-4 outline-none"
       />
       <hr />
-      {isDFA && (
+      {isDFA ? (
         <button
           onClick={checkString}
           className="rounded px-3 py-2 text-white font-semibold mt-3 bg-orange-400 hover:bg-orange-500"
         >
           Check
         </button>
+      ) : (
+        <button
+          onClick={() => alert("This feature is not avaliable for NFA yet.")}
+          className="rounded px-3 py-2 text-white font-semibold mt-3 bg-orange-400 hover:bg-orange-500"
+        >
+          Check
+        </button>
       )}
+      {isDFA === null && <div className="text-xs text-gray-500 mt-4"><span className="text-red-600">*</span>Check to find FA type first</div>}
     </div>
   );
 };
