@@ -62,7 +62,7 @@ const FaInputForm = ({ state, setState }) => {
         <label htmlFor="endStates" className="font-bold text-orange-400">End States</label>
         <Multiselect
           searchable={true}
-          placeholder="Select End States"
+          placeholder="Select Final States"
           className="rounded border border-gray-300"
           options={selectData}
           name="endStates"

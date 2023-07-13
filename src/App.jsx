@@ -98,10 +98,11 @@ export default function App() {
     }
   }
 
-  function checkString() {
+  // check if the string is accepted or not
+  function checkStringDFA() {
     const stringArray = string.split("");
 
-    // check if the string is accepted or not
+   
     if (string === "") {
       alert("Please enter a string");
       return;
@@ -145,6 +146,55 @@ export default function App() {
     }
   }
 
+  function checkStringNFA() {
+    const stringArray = string.split("");
+
+    if (string === "") {
+      alert("Please enter a string");
+      return;
+    }
+
+    //for NFA
+    console.log("=================NFA==================");
+
+    let state = startState[0];
+    // console.log("start state: ", state);
+    // stringArray.forEach((character) => {
+    //   console.log("character: ", character);
+
+    //   for (let i = 0; i < transitions.length; i++) {
+    //     console.log(
+    //       "transition: ",
+    //       transitions[i].state,
+    //       transitions[i].alphabet
+    //     );
+    //     if (
+    //       transitions[i].state === state &&
+    //       transitions[i].alphabet === character
+    //     ) {
+    //       state = transitions[i].transition;
+    //       console.log("state met condition:", state);
+    //       break;
+    //     }
+    //   }
+
+    //   if (state === undefined) {
+    //     alert("This string is not accepted, undifined");
+    //   }
+    // });
+
+    let result = endStates.includes(state);
+
+    if (result) {
+      alert("This string is accepted");
+    } else {
+      alert("This string is not accepted");
+    }
+  }
+
+
+  
+
   return (
     <div>
       <Header />
@@ -169,7 +219,8 @@ export default function App() {
         <Title title="Features" />
         <FaTypeChecker checkFAType={checkFAType} />
         <StringAceptedChecker
-          checkString={checkString}
+          checkStringDFA={checkStringDFA}
+          checkStringNFA={checkStringNFA}
           string={string}
           setString={setString}
           isDFA={isDFA}
