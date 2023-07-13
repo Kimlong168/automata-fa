@@ -1,4 +1,4 @@
-const StringAceptedChecker = ({ checkString, string, setString, isDFA }) => {
+const StringAceptedChecker = ({ checkStringDFA,checkStringNFA, string, setString, isDFA }) => {
   return (
     <div className="rounded shadow-lg p-5 border mb-5">
       <h1 className="text-md lg:text-xl py-5 pt-0 text-blue-900 font-semibold">
@@ -18,14 +18,14 @@ const StringAceptedChecker = ({ checkString, string, setString, isDFA }) => {
       <hr />
       {isDFA ? (
         <button
-          onClick={checkString}
+          onClick={checkStringDFA}
           className="rounded px-3 py-2 text-white font-semibold mt-3 bg-orange-400 hover:bg-orange-500"
         >
           Check
         </button>
       ) : (
         <button
-          onClick={() => alert("This feature is not avaliable for NFA yet.")}
+          onClick={checkStringNFA}
           className="rounded px-3 py-2 text-white font-semibold mt-3 bg-orange-400 hover:bg-orange-500"
         >
           Check
