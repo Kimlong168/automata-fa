@@ -1,6 +1,7 @@
+
 const FaTypeChecker = ({ checkFAType }) => {
   return (
-    <div className="rounded shadow-lg p-5 border">
+    <div className="rounded shadow-lg p-5 border mb-5">
       <h1 className="text-md lg:text-xl py-5 pt-0 text-blue-900 font-semibold">
         Test wheater your FA is deterministic or non-deternimistic
       </h1>

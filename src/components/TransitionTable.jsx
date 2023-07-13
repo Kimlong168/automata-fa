@@ -67,9 +67,11 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
           {alphabets.map((alphabet) => {
             return (
               <>
-                <td className="border border-blue-500 px-3 py-2">
+                <td
+                  className="border border-blue-500 px-3 py-2"
+                  key={`${state}${alphabet}`}
+                >
                   <Multiselect
-                    key={`${state}${alphabet}`}
                     placeholder={`${state}${alphabet}`}
                     options={selectData}
                     displayValue="name"
@@ -89,13 +91,12 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
     );
   });
 
-
   return (
     <div className="w-full my-5 scroll-bar overflow-x-auto mt-10 shadow-xl">
       <table className="border-collapse min-w-full h-full border">
         <thead className="bg-white border-b">
           <tr>
-            <th className="border border-blue-500 p-3 text-center text-orange-400">
+            <th className="border border-blue-950 p-3 text-center text-orange-400">
               Transition
             </th>
             {tableHeader}
