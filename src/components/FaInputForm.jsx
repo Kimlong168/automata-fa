@@ -1,30 +1,35 @@
 import { Multiselect } from "multiselect-react-dropdown";
 
-const FaInputForm = ({ state, setState }) => {
+const FaInputForm = ({ state, setState, setTransitions }) => {
   function handleChangeState(e) {
     const { name, value } = e.target;
     setState((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+
+    //set transitions to empty
+    setTransitions([]);
   }
 
-  function handleOnSelect(e,type) {
-    const selectedStates = e.map((state) => state.name).join(",");
-
-    if(type === 'start'){
+  function handleOnSelect(e, type) {
+    if (type === "start") {
       setState((prevState) => ({
         ...prevState,
-        startState: selectedStates,
+        startState: e[0].name,
       }));
       return;
     }
+
+    const selectedStates = e.map((state) => state.name).join(",");
 
     setState((prevState) => ({
       ...prevState,
       endStates: selectedStates,
     }));
 
+    //set transitions to empty
+    setTransitions([]);
   }
 
   const selectData = state.states.split(",").map((state) => {
@@ -34,7 +39,9 @@ const FaInputForm = ({ state, setState }) => {
   return (
     <div className="shadow-xl p-5 rounded border mt-5">
       <div className="flex flex-col gap-2">
-        <label htmlFor="states" className="font-bold text-orange-400">States</label>
+        <label htmlFor="states" className="font-bold text-orange-400">
+          States
+        </label>
         <input
           name="states"
           type="text"
@@ -45,21 +52,25 @@ const FaInputForm = ({ state, setState }) => {
         />
       </div>
       <div className="flex flex-col gap-2 mt-5">
-        <label htmlFor="startState" className="font-bold text-orange-400">Start State</label>
+        <label htmlFor="startState" className="font-bold text-orange-400">
+          Start State
+        </label>
 
         <Multiselect
+          singleSelect={true}
           placeholder="Select Start State"
           className="rounded border border-gray-300"
           options={selectData}
           name="endStates"
           displayValue="name"
-          onSelect={(e) => handleOnSelect(e,'start')} // Function will trigger on select event
-          onRemove={(e) => handleOnSelect(e,'start')} // Function will trigger on remove event
+          onSelect={(e) => handleOnSelect(e, "start")} // Function will trigger on select event
+          onRemove={(e) => handleOnSelect(e, "start")} // Function will trigger on remove event
         />
-
       </div>
       <div className="flex flex-col gap-2 mt-5">
-        <label htmlFor="endStates" className="font-bold text-orange-400">End States</label>
+        <label htmlFor="endStates" className="font-bold text-orange-400">
+          End States
+        </label>
         <Multiselect
           searchable={true}
           placeholder="Select Final States"
@@ -67,12 +78,14 @@ const FaInputForm = ({ state, setState }) => {
           options={selectData}
           name="endStates"
           displayValue="name"
-          onSelect={(e) => handleOnSelect(e,'end')} // Function will trigger on select event
-          onRemove={(e) => handleOnSelect(e,'end')} // Function will trigger on remove event
+          onSelect={(e) => handleOnSelect(e, "end")} // Function will trigger on select event
+          onRemove={(e) => handleOnSelect(e, "end")} // Function will trigger on remove event
         />
       </div>
       <div className="flex flex-col gap-2 mt-5">
-        <label htmlFor="alphabets" className="font-bold text-orange-400">Alphabets</label>
+        <label htmlFor="alphabets" className="font-bold text-orange-400">
+          Alphabets
+        </label>
         <input
           name="alphabets"
           type="text"

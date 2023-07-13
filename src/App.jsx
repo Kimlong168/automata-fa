@@ -22,7 +22,7 @@ export default function App() {
   console.log("state: ", state);
   const states = state.states.split(",");
   const alphabets = state.alphabets.split(",");
-  const startState = state.startState.split(",");
+  const startState = state.startState;
   const endStates = state.endStates.split(",");
 
   // feature to check wheater FA is the DFA or NFA
@@ -46,42 +46,41 @@ export default function App() {
       return;
     }
 
-    if (startState.length > 1) {
-      // check if start is more than one
-      setIsDFA(false);
-      alertDFA = false;
-      alert("This is Fa is a NFA. because it has more than one start state");
+    // check if all transitions are filled
+    let count = 0;
+    for (let i = 0; i < transitions.length; i++) {
+      if (transitions[i].transition !== "") {
+        count++;
+      }
+    }
+    if (count < states.length * alphabets.length) {
+      alert("Please fill the transitions");
       return;
     }
 
-    // check if there is any empty transition
-    let transitionCount = 0;
-    transitions.forEach((transition) => {
-      if (transition.transition !== "") {
-        transitionCount++;
+    // check if the transitions include ∅ or not
+    for (let i = 0; i < transitions.length; i++) {
+      if (transitions[i].transition.includes("∅")) {
+        setIsDFA(false);
+        alertDFA = false;
+        alert("This is Fa is a NFA. because it includes empty transition");
+        return;
       }
-    });
-
-    if (transitionCount < states.length * alphabets.length) {
-      setIsDFA(false);
-      alertDFA = false;
-      alert("This is Fa is a NFA. because it includes empty transition");
-      return;
     }
 
     // check if the transitions include epsolon or not
-    transitions.forEach((transition) => {
-      if (transition.transition.includes("ε")) {
+    for (let i = 0; i < transitions.length; i++) {
+      if (transitions[i].transition.includes("ε")) {
         setIsDFA(false);
         alertDFA = false;
-        alert("This is Fa is a NFA. because it includes ε");
+        alert("This is Fa is a NFA. because it includes ε transition");
         return;
       }
-    });
+    }
 
     // check if the transitions include more than one transition for a state and alphabet
-    transitions.forEach((transition) => {
-      const result = transition.transition.split(",");
+    for (let i = 0; i < transitions.length; i++) {
+      const result = transitions[i].transition.split(",");
       if (result.length > 1) {
         setIsDFA(false);
         alertDFA = false;
@@ -90,7 +89,7 @@ export default function App() {
         );
         return;
       }
-    });
+    }
 
     if (alertDFA) {
       alert("This is Fa is a DFA");
@@ -102,7 +101,6 @@ export default function App() {
   function checkStringDFA() {
     const stringArray = string.split("");
 
-   
     if (string === "") {
       alert("Please enter a string");
       return;
@@ -111,7 +109,7 @@ export default function App() {
     //for DFA
     console.log("=================DFA==================");
 
-    let state = startState[0];
+    let state = startState;
     console.log("start state: ", state);
     stringArray.forEach((character) => {
       console.log("character: ", character);
@@ -157,7 +155,7 @@ export default function App() {
     //for NFA
     console.log("=================NFA==================");
 
-    let state = startState[0];
+    let state = startState;
     // console.log("start state: ", state);
     // stringArray.forEach((character) => {
     //   console.log("character: ", character);
@@ -192,15 +190,16 @@ export default function App() {
     }
   }
 
-
-  
-
   return (
     <div>
       <Header />
       <div className="p-6 md:p-12 pb-0 pt-3">
         <Title title="Create Finite Automata" />
-        <FaInputForm state={state} setState={setState} />
+        <FaInputForm
+          state={state}
+          setState={setState}
+          setTransitions={setTransitions}
+        />
 
         {state.states !== "" && state.alphabets !== "" && (
           <div>
