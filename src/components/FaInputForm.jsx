@@ -10,6 +10,13 @@ const FaInputForm = ({ state, setState, setTransitions }) => {
 
     //set transitions to empty
     setTransitions([]);
+
+    //set end and start to empty
+    setState((prevState) => ({
+      ...prevState,
+      startState: "",
+      endStates: "",
+    }));
   }
 
   function handleOnSelect(e, type) {
@@ -29,9 +36,32 @@ const FaInputForm = ({ state, setState, setTransitions }) => {
     }));
   }
 
+  //select options and selected values for state, start state and end states
+
   const selectData = state.states.split(",").map((state) => {
     return { name: state, id: state };
   });
+
+  let endStatesSelectedValues;
+  if (state.endStates === "") {
+    endStatesSelectedValues = [];
+  } else {
+    endStatesSelectedValues = state.endStates.split(",").map((state) => {
+      return { name: state, id: state };
+    });
+  }
+
+  let startStateSelectedValue;
+  if (state.startState === "") {
+    startStateSelectedValue = [];
+  } else {
+    startStateSelectedValue = [
+      {
+        name: state.startState,
+        id: state.startState,
+      },
+    ];
+  }
 
   return (
     <div className="shadow-xl p-5 rounded border mt-5">
@@ -54,6 +84,7 @@ const FaInputForm = ({ state, setState, setTransitions }) => {
         </label>
 
         <Multiselect
+          selectedValues={startStateSelectedValue}
           singleSelect={true}
           placeholder="Select Start State"
           className="rounded border border-gray-300"
@@ -69,6 +100,7 @@ const FaInputForm = ({ state, setState, setTransitions }) => {
           End States
         </label>
         <Multiselect
+          selectedValues={endStatesSelectedValues}
           searchable={true}
           placeholder="Select Final States"
           className="rounded border border-gray-300"

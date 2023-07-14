@@ -233,7 +233,7 @@ export default function App() {
     <div>
       <Header />
       <div className="p-6 md:p-12 pb-0 pt-3">
-        <Title title="Create Finite Automata" />
+        <Title title="Design Finite Automata" />
         <FaInputForm
           state={state}
           setState={setState}
