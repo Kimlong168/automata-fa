@@ -7,6 +7,7 @@ import TransitionTable from "./components/TransitionTable";
 import FaTypeChecker from "./components/FaTypeChecker";
 import StringAceptedChecker from "./components/StringAceptedChecker";
 import Title from "./components/title";
+
 export default function App() {
   const [state, setState] = useState({
     startState: "",
@@ -14,10 +15,10 @@ export default function App() {
     states: "",
     alphabets: "",
   });
+  const [transitions, setTransitions] = useState([]);
   const [isDFA, setIsDFA] = useState(null);
   const [string, setString] = useState("");
-  const [transitions, setTransitions] = useState([]);
-
+  // const [nfaStates, setNfaStates] = useState([]);
   console.log("transitions: ", transitions);
   console.log("state: ", state);
   const states = state.states.split(",");
@@ -29,20 +30,13 @@ export default function App() {
   function checkFAType() {
     let alertDFA = true;
     // check if there is any empty field
-    if (state.states === "" || state.alphabets === "") {
+    if (
+      state.states === "" ||
+      state.alphabets === "" ||
+      state.startState === "" ||
+      state.endStates === ""
+    ) {
       alert("Please fill all the fields");
-      return;
-    }
-
-    if (state.startState === "") {
-      // check if start state is empty
-      alert("Please fill the start state");
-      return;
-    }
-
-    if (state.endStates === "") {
-      // check if end states is empty
-      alert("Please fill the end states.");
       return;
     }
 
@@ -150,7 +144,7 @@ export default function App() {
     }
   }
 
-  function checkStringNFA() {
+  const checkStringNFA = () => {
     const stringArray = string.split("");
 
     if (string === "") {
@@ -161,62 +155,76 @@ export default function App() {
     //for NFA
     console.log("=================NFA==================");
 
-    let state = [];
-  
-    state.push(startState);
+    let nfaStates = [];
+    let tempStates = [];
+
+    nfaStates.push(startState);
 
     stringArray.forEach((character) => {
       console.log("-------character-------: ", character);
-      console.log("start state: ", state);
-
+      console.log("start state: ", nfaStates);
+      tempStates = nfaStates;
       // ---------------------------------------------------
 
-      let length = state.length;
+      let length = nfaStates.length;
       for (let j = 0; j < length; j++) {
         for (let i = 0; i < transitions.length; i++) {
+          console.log(nfaStates);
+
           if (
-            transitions[i].state === state[j] &&
+            transitions[i].state === nfaStates[j] &&
             transitions[i].alphabet === character
           ) {
             console.log(
               "transition: ",
               transitions[i].state,
-              transitions[i].alphabet
+              transitions[i].alphabet,
+              " bn ",
+              transitions[i].transition
             );
 
-            console.log("old State :", state[j]);
+            //the problem is here : delete from tempstate but it also deleted form state
 
-            state.forEach((item) => {
-              if (item === state[j]) {
-                state.splice(state.indexOf(item), 1);
+            tempStates.forEach((item) => {
+              if (item === nfaStates[j]) {
+                // tempStates.splice(tempStates.indexOf(item), 1);
+                tempStates = tempStates.filter((item) => item !== nfaStates[j]);
                 console.log("delete", item);
               }
             });
+
+
 
             //configuration for NFA
             if (transitions[i].transition.includes(",")) {
               const result = transitions[i].transition.split(",");
               console.log("add more state :", result);
-
-              state = [...state, ...result];
+              tempStates = [...tempStates, ...result];
+              // state = [...state, ...result];
             } else {
-              console.log("add more state :", transitions[i].transition);
-
-              state = [...state, transitions[i].transition];
+              if (transitions[i].transition !== "∅") {
+                console.log("add more state :", transitions[i].transition);
+                tempStates = [...tempStates, transitions[i].transition];
+                // state = [...state, transitions[i].transition];
+              }
             }
 
-            console.log("state met condition:", state);
+            console.log("state met condition:", tempStates);
+
             break;
           }
         }
       }
+      console.log("temp state:", tempStates);
+      console.log("original state:", nfaStates);
+      nfaStates = tempStates;
     });
 
-    console.log("all states: ", state);
+    console.log("all states: ", nfaStates);
     let result = true;
 
-    for (let i = 0; i < state.length; i++) {
-      result = endStates.includes(state[i]);
+    for (let i = 0; i < nfaStates.length; i++) {
+      result = endStates.includes(nfaStates[i]);
       if (result) {
         break;
       }
@@ -227,7 +235,7 @@ export default function App() {
     } else {
       alert("This string is not accepted");
     }
-  }
+  };
 
   return (
     <div>
@@ -238,6 +246,7 @@ export default function App() {
           state={state}
           setState={setState}
           setTransitions={setTransitions}
+          setIsDFA={setIsDFA}
         />
 
         {state.states !== "" && state.alphabets !== "" && (
@@ -246,6 +255,7 @@ export default function App() {
               state={state}
               transitions={transitions}
               setTransitions={setTransitions}
+              setIsDFA={setIsDFA}
             />
             {/* <DisplayState state={state} transitions={transitions} /> */}
           </div>

@@ -1,5 +1,5 @@
 import Multiselect from "multiselect-react-dropdown";
-const TransitionTable = ({ state, transitions, setTransitions }) => {
+const TransitionTable = ({ state, transitions, setTransitions, setIsDFA }) => {
   const states = state.states.split(",");
   const alphabets = state.alphabets.split(",");
   const endStates = state.endStates.split(",");
@@ -40,6 +40,9 @@ const TransitionTable = ({ state, transitions, setTransitions }) => {
         },
       ]);
     }
+
+    //reset isDFA to null when transition change
+    setIsDFA(null);
   }
 
   const tableHeader = alphabets.map((alphabet) => {

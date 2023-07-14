@@ -1,6 +1,6 @@
 import { Multiselect } from "multiselect-react-dropdown";
 
-const FaInputForm = ({ state, setState, setTransitions }) => {
+const FaInputForm = ({ state, setState, setTransitions, setIsDFA }) => {
   function handleChangeState(e) {
     const { name, value } = e.target;
     setState((prevState) => ({
@@ -8,15 +8,20 @@ const FaInputForm = ({ state, setState, setTransitions }) => {
       [name]: value,
     }));
 
-    //set transitions to empty
+    //set transitions to empty when state change
     setTransitions([]);
 
-    //set end and start to empty
-    setState((prevState) => ({
-      ...prevState,
-      startState: "",
-      endStates: "",
-    }));
+    //set end and start to empty when we delete states
+    if (name === "states" && value.length < state.states.length) {
+      setState((prevState) => ({
+        ...prevState,
+        startState: "",
+        endStates: "",
+      }));
+    }
+
+    //reset isDFA to null when state change
+    setIsDFA(null);
   }
 
   function handleOnSelect(e, type) {

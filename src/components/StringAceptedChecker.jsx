@@ -1,4 +1,11 @@
-const StringAceptedChecker = ({ checkStringDFA,checkStringNFA, string, setString, isDFA }) => {
+import Btn from "./Btn";
+const StringAceptedChecker = ({
+  checkStringDFA,
+  checkStringNFA,
+  string,
+  setString,
+  isDFA,
+}) => {
   return (
     <div className="rounded shadow-lg p-5 border mb-5">
       <h1 className="text-md lg:text-xl py-5 pt-0 text-blue-900 font-semibold">
@@ -16,22 +23,16 @@ const StringAceptedChecker = ({ checkStringDFA,checkStringNFA, string, setString
         className="py-4 outline-none w-full"
       />
       <hr />
-      {isDFA ? (
-        <button
-          onClick={checkStringDFA}
-          className="rounded px-3 py-2 text-white font-semibold mt-3 bg-orange-400 hover:bg-orange-500"
-        >
-          Check
-        </button>
+      {isDFA !== null ? (
+        <Btn
+          handleClick={() => (isDFA ? checkStringDFA() : checkStringNFA())}
+        />
       ) : (
-        <button
-          onClick={checkStringNFA}
-          className="rounded px-3 py-2 text-white font-semibold mt-3 bg-orange-400 hover:bg-orange-500"
-        >
-          Check
-        </button>
+        <div className="text-xs text-gray-500 mt-4">
+          <span className="text-red-600">*</span>Check to find FA's type first
+          to enalbe this feature.
+        </div>
       )}
-      {isDFA === null && <div className="text-xs text-gray-500 mt-4"><span className="text-red-600">*</span>Check to find FA type first</div>}
     </div>
   );
 };
