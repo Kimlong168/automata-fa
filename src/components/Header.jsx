@@ -7,7 +7,7 @@ const Header = () => {
             <img className="h-[40px]" src={logo} alt="cadt" />
         </div>
         <div>
-            <h1 className="font-bold text-xl text-blue-900">Automata(FA)</h1>
+            <h1 className="font-bold text-xl text-blue-950 uppercase">Automata</h1>
         </div>
     </div>
   )

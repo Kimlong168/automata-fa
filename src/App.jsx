@@ -53,6 +53,12 @@ export default function App() {
         count++;
       }
     }
+    console.log("count: ", count);
+    console.log(
+      "states.length * alphabets.length: ",
+      states.length,
+      alphabets.length
+    );
     if (count < states.length * alphabets.length) {
       alert("Please fill the transitions");
       return;
@@ -155,33 +161,66 @@ export default function App() {
     //for NFA
     console.log("=================NFA==================");
 
-    let state = startState;
-    // console.log("start state: ", state);
-    // stringArray.forEach((character) => {
-    //   console.log("character: ", character);
+    let state = [];
+  
+    state.push(startState);
 
-    //   for (let i = 0; i < transitions.length; i++) {
-    //     console.log(
-    //       "transition: ",
-    //       transitions[i].state,
-    //       transitions[i].alphabet
-    //     );
-    //     if (
-    //       transitions[i].state === state &&
-    //       transitions[i].alphabet === character
-    //     ) {
-    //       state = transitions[i].transition;
-    //       console.log("state met condition:", state);
-    //       break;
-    //     }
-    //   }
+    stringArray.forEach((character) => {
+      console.log("-------character-------: ", character);
+      console.log("start state: ", state);
 
-    //   if (state === undefined) {
-    //     alert("This string is not accepted, undifined");
-    //   }
-    // });
+      // ---------------------------------------------------
 
-    let result = endStates.includes(state);
+      let length = state.length;
+      for (let j = 0; j < length; j++) {
+        for (let i = 0; i < transitions.length; i++) {
+          if (
+            transitions[i].state === state[j] &&
+            transitions[i].alphabet === character
+          ) {
+            console.log(
+              "transition: ",
+              transitions[i].state,
+              transitions[i].alphabet
+            );
+
+            console.log("old State :", state[j]);
+
+            state.forEach((item) => {
+              if (item === state[j]) {
+                state.splice(state.indexOf(item), 1);
+                console.log("delete", item);
+              }
+            });
+
+            //configuration for NFA
+            if (transitions[i].transition.includes(",")) {
+              const result = transitions[i].transition.split(",");
+              console.log("add more state :", result);
+
+              state = [...state, ...result];
+            } else {
+              console.log("add more state :", transitions[i].transition);
+
+              state = [...state, transitions[i].transition];
+            }
+
+            console.log("state met condition:", state);
+            break;
+          }
+        }
+      }
+    });
+
+    console.log("all states: ", state);
+    let result = true;
+
+    for (let i = 0; i < state.length; i++) {
+      result = endStates.includes(state[i]);
+      if (result) {
+        break;
+      }
+    }
 
     if (result) {
       alert("This string is accepted");

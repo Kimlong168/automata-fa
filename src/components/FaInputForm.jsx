@@ -27,9 +27,6 @@ const FaInputForm = ({ state, setState, setTransitions }) => {
       ...prevState,
       endStates: selectedStates,
     }));
-
-    //set transitions to empty
-    setTransitions([]);
   }
 
   const selectData = state.states.split(",").map((state) => {
