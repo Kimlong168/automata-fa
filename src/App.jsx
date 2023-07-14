@@ -193,8 +193,6 @@ export default function App() {
               }
             });
 
-
-
             //configuration for NFA
             if (transitions[i].transition.includes(",")) {
               const result = transitions[i].transition.split(",");
@@ -222,6 +220,10 @@ export default function App() {
 
     console.log("all states: ", nfaStates);
     let result = true;
+
+    if (nfaStates.length == 0) {
+      result = false;
+    }
 
     for (let i = 0; i < nfaStates.length; i++) {
       result = endStates.includes(nfaStates[i]);
