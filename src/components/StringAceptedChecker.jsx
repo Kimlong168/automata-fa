@@ -13,7 +13,7 @@ const StringAceptedChecker = ({ checkStringDFA,checkStringNFA, string, setString
         value={string}
         name="string"
         placeholder="Please input the string"
-        className="py-4 outline-none"
+        className="py-4 outline-none w-full"
       />
       <hr />
       {isDFA ? (
