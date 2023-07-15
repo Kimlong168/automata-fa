@@ -1,6 +1,12 @@
 import { Multiselect } from "multiselect-react-dropdown";
 
-const FaInputForm = ({ state, setState, setTransitions, setIsDFA }) => {
+const FaInputForm = ({
+  state,
+  setState,
+  setTransitions,
+  setIsDFA,
+  setIsIncludeEpsolon,
+}) => {
   function handleChangeState(e) {
     const { name, value } = e.target;
     setState((prevState) => ({
@@ -39,6 +45,19 @@ const FaInputForm = ({ state, setState, setTransitions, setIsDFA }) => {
       ...prevState,
       endStates: selectedStates,
     }));
+  }
+
+  function handleIncludeEpsolon(e) {
+    if (e.target.value === "true") {
+      setIsIncludeEpsolon(true);
+    } else {
+      setIsIncludeEpsolon(false);
+    }
+    console.log("include epsilon: ", e.target.value);
+    //set transitions to empty when state change
+    setTransitions([]);
+    //reset isDFA to null when state change
+    setIsDFA(null);
   }
 
   //select options and selected values for state, start state and end states
@@ -106,7 +125,7 @@ const FaInputForm = ({ state, setState, setTransitions, setIsDFA }) => {
         </label>
         <Multiselect
           selectedValues={endStatesSelectedValues}
-          searchable={true}
+          searchable={false}
           placeholder="Select Final States"
           className="rounded border border-gray-300"
           options={selectData}
@@ -128,6 +147,21 @@ const FaInputForm = ({ state, setState, setTransitions, setIsDFA }) => {
           value={state.alphabets}
           onChange={handleChangeState}
         />
+      </div>
+      {/* include epsolon transition select box */}
+      <div className="flex flex-col gap-2 mt-5">
+        <label htmlFor="endStates" className="font-bold text-orange-400">
+          Epsolon Transition(ε)
+        </label>
+        <select
+          defaultValue="false"
+          name="epsilon"
+          onClick={handleIncludeEpsolon}
+          className="px-2 py-2 rounded border-2 outline-none border-gray-300 text-gray-500"
+        >
+          <option value="false">No Epsolon Transition</option>
+          <option value="true">Include Epsolon Transition</option>
+        </select>
       </div>
     </div>
   );

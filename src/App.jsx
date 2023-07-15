@@ -18,7 +18,8 @@ export default function App() {
   const [transitions, setTransitions] = useState([]);
   const [isDFA, setIsDFA] = useState(null);
   const [string, setString] = useState("");
-  // const [nfaStates, setNfaStates] = useState([]);
+  const [isIncludeEpsolon, setIsIncludeEpsolon] = useState(false);
+  console.log("isIncludeEpsolon: ", isIncludeEpsolon);
   console.log("transitions: ", transitions);
   console.log("state: ", state);
   const states = state.states.split(",");
@@ -47,12 +48,7 @@ export default function App() {
         count++;
       }
     }
-    console.log("count: ", count);
-    console.log(
-      "states.length * alphabets.length: ",
-      states.length,
-      alphabets.length
-    );
+
     if (count < states.length * alphabets.length) {
       alert("Please fill the transitions");
       return;
@@ -69,13 +65,11 @@ export default function App() {
     }
 
     // check if the transitions include epsolon or not
-    for (let i = 0; i < transitions.length; i++) {
-      if (transitions[i].transition.includes("ε")) {
-        setIsDFA(false);
-        alertDFA = false;
-        alert("This is Fa is a NFA. because it includes ε transition");
-        return;
-      }
+    if (isIncludeEpsolon) {
+      setIsDFA(false);
+      alertDFA = false;
+      alert("This is Fa is a NFA. because it includes ε transition");
+      return;
     }
 
     // check if the transitions include more than one transition for a state and alphabet
@@ -164,13 +158,12 @@ export default function App() {
       console.log("-------character-------: ", character);
       console.log("start state: ", nfaStates);
       tempStates = nfaStates;
+
       // ---------------------------------------------------
 
       let length = nfaStates.length;
       for (let j = 0; j < length; j++) {
         for (let i = 0; i < transitions.length; i++) {
-          console.log(nfaStates);
-
           if (
             transitions[i].state === nfaStates[j] &&
             transitions[i].alphabet === character
@@ -179,19 +172,30 @@ export default function App() {
               "transition: ",
               transitions[i].state,
               transitions[i].alphabet,
-              " bn ",
+              " -> ",
               transitions[i].transition
             );
 
-            //the problem is here : delete from tempstate but it also deleted form state
+            //the problem is here : delete from tempstate but it also deleted form state (solved)
 
-            tempStates.forEach((item) => {
-              if (item === nfaStates[j]) {
-                // tempStates.splice(tempStates.indexOf(item), 1);
-                tempStates = tempStates.filter((item) => item !== nfaStates[j]);
-                console.log("delete", item);
+            for (let i = 0; i < tempStates.length; i++) {
+              if (tempStates[i] === nfaStates[j]) {
+                //problem is here : delete only one state (solved)
+
+                let time = 0;
+                tempStates = tempStates.filter((item) => {
+                  if (item === nfaStates[j] && time === 0) {
+                    time++;
+                    return false;
+                  } else {
+                    return true;
+                  }
+                });
+
+                console.log("delete", i + 1, nfaStates[j]);
+                break;
               }
-            });
+            }
 
             //configuration for NFA
             if (transitions[i].transition.includes(",")) {
@@ -209,10 +213,62 @@ export default function App() {
 
             console.log("state met condition:", tempStates);
 
-            break;
+            // break;
           }
         }
+        let tempState_length = tempStates.length;
+        let temp_tempStates = tempStates;
+        for (let k = 0; k < tempState_length; k++) {
+          for (let m = 0; m < transitions.length; m++) {
+            if (
+              transitions[m].state === temp_tempStates[k] &&
+              transitions[m].alphabet === "ε"
+            ) {
+              if (transitions[m].transition.includes(",")) {
+                const result = transitions[m].transition.split(",");
+                let finalResult = result.filter((item) => {
+                  if (temp_tempStates.includes(item)) {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                });
+
+                temp_tempStates = [...temp_tempStates, ...finalResult];
+                console.log(
+                  "epsilon transition: ",
+                  transitions[m].state,
+                  " -> ",
+                  transitions[m].transition
+                );
+                console.log("state met condition (epsilon):", temp_tempStates);
+              } else if (transitions[m].transition !== "∅") {
+                if (!temp_tempStates.includes(transitions[m].transition)) {
+                  temp_tempStates = [
+                    ...temp_tempStates,
+                    transitions[m].transition,
+                  ];
+                  console.log(
+                    "epsilon transition: ",
+                    transitions[m].state,
+                    " -> ",
+                    transitions[m].transition
+                  );
+                  console.log(
+                    "state met condition (epsilon):",
+                    temp_tempStates
+                  );
+                }
+              }
+
+              break;
+            }
+          }
+        }
+
+        tempStates = temp_tempStates;
       }
+
       console.log("temp state:", tempStates);
       console.log("original state:", nfaStates);
       nfaStates = tempStates;
@@ -249,6 +305,7 @@ export default function App() {
           setState={setState}
           setTransitions={setTransitions}
           setIsDFA={setIsDFA}
+          setIsIncludeEpsolon={setIsIncludeEpsolon}
         />
 
         {state.states !== "" && state.alphabets !== "" && (
@@ -258,6 +315,7 @@ export default function App() {
               transitions={transitions}
               setTransitions={setTransitions}
               setIsDFA={setIsDFA}
+              isIncludeEpsolon={isIncludeEpsolon}
             />
             {/* <DisplayState state={state} transitions={transitions} /> */}
           </div>

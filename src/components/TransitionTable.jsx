@@ -1,5 +1,11 @@
 import Multiselect from "multiselect-react-dropdown";
-const TransitionTable = ({ state, transitions, setTransitions, setIsDFA }) => {
+const TransitionTable = ({
+  state,
+  transitions,
+  setTransitions,
+  setIsDFA,
+  isIncludeEpsolon,
+}) => {
   const states = state.states.split(",");
   const alphabets = state.alphabets.split(",");
   const endStates = state.endStates.split(",");
@@ -8,8 +14,15 @@ const TransitionTable = ({ state, transitions, setTransitions, setIsDFA }) => {
     return { name: state, id: state };
   });
 
-  selectData.push({ name: "ε", id: "ε" });
+  //include ∅ in select options
   selectData.push({ name: "∅", id: "∅" });
+
+  //include epsolon in alphabets/table header
+  if(isIncludeEpsolon){
+    alphabets.push("ε");
+  }else if(alphabets.includes("ε")){
+    alphabets.pop();
+  }
 
   function handleOnSelect(e, id, state, alphabet) {
     const value = e.map((state) => state.name).join(",");
@@ -53,7 +66,7 @@ const TransitionTable = ({ state, transitions, setTransitions, setIsDFA }) => {
       </>
     );
   });
-
+ 
   const stateRow = states.map((state) => {
     if (state === "") return null;
     return (
@@ -97,6 +110,7 @@ const TransitionTable = ({ state, transitions, setTransitions, setIsDFA }) => {
                     selectedValues={transitionArr}
                     placeholder={`${state}${alphabet}`}
                     options={selectData}
+                    searchable={false}
                     displayValue="name"
                     onSelect={(e) =>
                       handleOnSelect(e, `${state}${alphabet}`, state, alphabet)
