@@ -202,26 +202,24 @@ export default function App() {
               const result = transitions[i].transition.split(",");
               console.log("add more state :", result);
               tempStates = [...tempStates, ...result];
-              // state = [...state, ...result];
             } else {
               if (transitions[i].transition !== "∅") {
                 console.log("add more state :", transitions[i].transition);
                 tempStates = [...tempStates, transitions[i].transition];
-                // state = [...state, transitions[i].transition];
               }
             }
 
             console.log("state met condition:", tempStates);
-
-            // break;
           }
         }
+
+        // ---------------------------------------------------
         let tempState_length = tempStates.length;
         let temp_tempStates = tempStates;
         for (let k = 0; k < tempState_length; k++) {
           for (let m = 0; m < transitions.length; m++) {
             if (
-              transitions[m].state === temp_tempStates[k] &&
+              transitions[m].state === tempStates[k] &&
               transitions[m].alphabet === "ε"
             ) {
               if (transitions[m].transition.includes(",")) {
@@ -305,6 +303,7 @@ export default function App() {
           setState={setState}
           setTransitions={setTransitions}
           setIsDFA={setIsDFA}
+          isIncludeEpsolon={isIncludeEpsolon}
           setIsIncludeEpsolon={setIsIncludeEpsolon}
         />
 

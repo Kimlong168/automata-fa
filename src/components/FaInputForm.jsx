@@ -5,6 +5,7 @@ const FaInputForm = ({
   setState,
   setTransitions,
   setIsDFA,
+  isIncludeEpsolon,
   setIsIncludeEpsolon,
 }) => {
   function handleChangeState(e) {
@@ -48,6 +49,14 @@ const FaInputForm = ({
   }
 
   function handleIncludeEpsolon(e) {
+    //prevent from reseting transitions/isDFA when we click on same option
+    if (
+      (e.target.value === "true" && isIncludeEpsolon) ||
+      (e.target.value === "false" && !isIncludeEpsolon)
+    ) {
+      return;
+    }
+
     if (e.target.value === "true") {
       setIsIncludeEpsolon(true);
     } else {
@@ -156,7 +165,7 @@ const FaInputForm = ({
         <select
           defaultValue="false"
           name="epsilon"
-          onClick={handleIncludeEpsolon}
+          onChange={handleIncludeEpsolon}
           className="px-2 py-2 rounded border-2 outline-none border-gray-300 text-gray-500"
         >
           <option value="false">No Epsolon Transition</option>
