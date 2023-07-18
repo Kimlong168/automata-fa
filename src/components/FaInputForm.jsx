@@ -8,6 +8,7 @@ const FaInputForm = ({
   isIncludeEpsolon,
   setIsIncludeEpsolon,
 }) => {
+  
   function handleChangeState(e) {
     const { name, value } = e.target;
     setState((prevState) => ({
@@ -133,8 +134,8 @@ const FaInputForm = ({
           End States
         </label>
         <Multiselect
+          showArrow={true}
           selectedValues={endStatesSelectedValues}
-          searchable={false}
           placeholder="Select Final States"
           className="rounded border border-gray-300"
           options={selectData}

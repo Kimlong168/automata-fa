@@ -18,9 +18,9 @@ const TransitionTable = ({
   selectData.push({ name: "∅", id: "∅" });
 
   //include epsolon in alphabets/table header
-  if(isIncludeEpsolon){
+  if (isIncludeEpsolon) {
     alphabets.push("ε");
-  }else if(alphabets.includes("ε")){
+  } else if (alphabets.includes("ε")) {
     alphabets.pop();
   }
 
@@ -66,7 +66,7 @@ const TransitionTable = ({
       </>
     );
   });
- 
+
   const stateRow = states.map((state) => {
     if (state === "") return null;
     return (
@@ -107,10 +107,10 @@ const TransitionTable = ({
                   key={`${state}${alphabet}`}
                 >
                   <Multiselect
+                    caseSensitiveSearch={true}
                     selectedValues={transitionArr}
                     placeholder={`${state}${alphabet}`}
                     options={selectData}
-                    searchable={false}
                     displayValue="name"
                     onSelect={(e) =>
                       handleOnSelect(e, `${state}${alphabet}`, state, alphabet)

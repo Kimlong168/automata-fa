@@ -7,6 +7,7 @@ import TransitionTable from "./components/TransitionTable";
 import FaTypeChecker from "./components/FaTypeChecker";
 import StringAceptedChecker from "./components/StringAceptedChecker";
 import Title from "./components/title";
+import Converter from "./components/Converter";
 
 export default function App() {
   const [state, setState] = useState({
@@ -15,6 +16,7 @@ export default function App() {
     states: "",
     alphabets: "",
   });
+
   const [transitions, setTransitions] = useState([]);
   const [isDFA, setIsDFA] = useState(null);
   const [string, setString] = useState("");
@@ -27,10 +29,9 @@ export default function App() {
   const startState = state.startState;
   const endStates = state.endStates.split(",");
 
-  // feature to check wheater FA is the DFA or NFA
-  function checkFAType() {
-    let alertDFA = true;
-    // check if there is any empty field
+  //design finite automata , fill all the fields
+  function isFA() {
+    // check if there is any empty states and alphabets
     if (
       state.states === "" ||
       state.alphabets === "" ||
@@ -38,7 +39,7 @@ export default function App() {
       state.endStates === ""
     ) {
       alert("Please fill all the fields");
-      return;
+      return false;
     }
 
     // check if all transitions are filled
@@ -51,16 +52,23 @@ export default function App() {
 
     if (count < states.length * alphabets.length) {
       alert("Please fill the transitions");
-      return;
+      return false;
     }
 
+    return true;
+  }
+
+  function isDfa() {
+    let alertDFA = true;
+    // check if there is any empty field
+    if (!isFA()) return false;
     // check if the transitions include ∅ or not
     for (let i = 0; i < transitions.length; i++) {
       if (transitions[i].transition.includes("∅")) {
         setIsDFA(false);
         alertDFA = false;
-        alert("This is Fa is a NFA. because it includes empty transition");
-        return;
+        let msg = "This is Fa is a NFA. because it includes ∅ transition";
+        return msg;
       }
     }
 
@@ -68,8 +76,8 @@ export default function App() {
     if (isIncludeEpsolon) {
       setIsDFA(false);
       alertDFA = false;
-      alert("This is Fa is a NFA. because it includes ε transition");
-      return;
+      let msg = "This is Fa is a NFA. because it includes ε transition";
+      return msg;
     }
 
     // check if the transitions include more than one transition for a state and alphabet
@@ -78,21 +86,34 @@ export default function App() {
       if (result.length > 1) {
         setIsDFA(false);
         alertDFA = false;
-        alert(
-          "This is Fa is a NFA. because it includes more than one transition for a state and alphabet"
-        );
-        return;
+        let msg =
+          "This is Fa is a NFA. because it includes more than one transition for a state and alphabet";
+
+        return msg;
       }
     }
 
     if (alertDFA) {
-      alert("This is Fa is a DFA");
       setIsDFA(true);
+      let msg = "This is Fa is a DFA";
+      return msg;
+    }
+  }
+
+  // feature to check wheater FA is the DFA or NFA
+  function checkFAType() {
+    const msg = isDfa();
+    if (msg) {
+      alert(msg);
     }
   }
 
   // check if the string is accepted or not
   function checkStringDFA() {
+    //to make sure all fields are filled
+    //to find if the FA is DFA or NFA
+    if (!isDfa()) return;
+
     const stringArray = string.split("");
 
     if (string === "") {
@@ -124,9 +145,9 @@ export default function App() {
         }
       }
 
-      if (state === undefined) {
-        alert("This string is not accepted, undifined");
-      }
+      // if (state === undefined) {
+      //   alert("This string is not accepted, undifined");
+      // }
     });
 
     let result = endStates.includes(state);
@@ -139,6 +160,10 @@ export default function App() {
   }
 
   const checkStringNFA = () => {
+    //to make sure all fields are filled
+    //to find if the FA is DFA or NFA
+    if (!isDfa()) return;
+
     const stringArray = string.split("");
 
     if (string === "") {
@@ -192,7 +217,7 @@ export default function App() {
                   }
                 });
 
-                console.log("delete", i + 1, nfaStates[j]);
+                console.log("delete", nfaStates[j]);
                 break;
               }
             }
@@ -213,7 +238,7 @@ export default function App() {
           }
         }
 
-        // ---------------------------------------------------
+        // ----------------------- epsilon transition -----------------------
         let tempState_length = tempStates.length;
         let temp_tempStates = tempStates;
         for (let k = 0; k < tempState_length; k++) {
@@ -293,11 +318,202 @@ export default function App() {
     }
   };
 
+  //---------------------------------convert NFA to DFA--------------------------
+  const convertNFAtoDFA = () => {
+    //to make sure all fields are filled
+    //to find if the FA is DFA or NFA
+    if (!isDfa()) return;
+
+    let nfaStates = [];
+    let dfaStates = [];
+    // let dfaTransitions = [];
+    nfaStates.push(startState);
+
+    //find transition for NFA for epsilon
+    transitions.forEach((transition) => {
+      for (let i = 0; i < nfaStates.length; i++) {
+        if (nfaStates[i] === transition.state && transition.alphabet === "ε") {
+          if (transition.transition.includes(",")) {
+            const result = transition.transition.split(",");
+            nfaStates = [...nfaStates, ...result];
+          } else if (transition.transition !== "∅") {
+            nfaStates = [...nfaStates, transition.transition];
+          }
+        }
+      }
+    });
+
+    dfaStates.push({
+      fromNfaStates: nfaStates,
+      name: "q0'",
+      isStart: true,
+      isEndState: false,
+      transitions: [],
+    });
+
+    //find transition for NFA for all aphabets
+    //loop through dfaStates
+    console.log("============Converter===============");
+    // dfaStates.length
+    for (let i = 0; i < dfaStates.length; i++) {
+      //loop through alphabets
+      console.log("=====dfa from Nfa States=====", dfaStates[i].fromNfaStates);
+
+      alphabets.forEach((alphabet) => {
+        console.log("---aphabet---: ", alphabet);
+        console.log("start dfaStates: ", dfaStates[i].fromNfaStates);
+
+        let tempDfaStates = dfaStates[i].fromNfaStates;
+        // let tempDfaStates = [];
+        // let tempDfaTransitions = dfaStates[i].transitions;
+
+        for (let j = 0; j < dfaStates[i].fromNfaStates.length; j++) {
+          for (let n = 0; n < transitions.length; n++) {
+            //find transition for NFA for all aphabets
+            if (
+              dfaStates[i].fromNfaStates[j] == transitions[n].state &&
+              alphabet == transitions[n].alphabet
+            ) {
+              //delete the old state
+
+              let time = 0;
+              tempDfaStates = tempDfaStates.filter((item) => {
+                if (item === dfaStates[i].fromNfaStates[j] && time === 0) {
+                  time++;
+                  return false;
+                } else {
+                  return true;
+                }
+              });
+
+              console.log("delete", dfaStates[i].fromNfaStates[j]);
+
+              //add new state
+              if (transitions[n].transition.includes(",")) {
+                let result = transitions[n].transition.split(",");
+                //check existing state
+                result = result.filter((item) => {
+                  if (
+                    tempDfaStates.includes(item) &&
+                    !dfaStates[i].fromNfaStates.includes(item)
+                  ) {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                });
+                tempDfaStates = [...tempDfaStates, ...result];
+                console.log("add to tempDfaStates: ", result);
+              } else if (transitions[n].transition !== "∅") {
+                //check existing state
+                if (
+                  !(
+                    tempDfaStates.includes(transitions[n].transition) &&
+                    !dfaStates[i].fromNfaStates.includes(
+                      transitions[n].transition
+                    )
+                  )
+                ) {
+                  tempDfaStates = [...tempDfaStates, transitions[n].transition];
+                  console.log(
+                    "add to tempDfaStates: ",
+                    transitions[n].transition
+                  );
+                }
+              }
+
+              //epsolon transition
+              //double check here for epsolon transition
+              console.log("epsolon---")
+              transitions.forEach((transition) => {
+                for (let m = 0; m < tempDfaStates.length; m++) {
+                  if (
+                    tempDfaStates[m] === transition.state &&
+                    transition.alphabet === "ε"
+                  ) {
+                    if (transition.transition.includes(",")) {
+                      let result = transition.transition.split(",");
+                      //check existing state
+                      result = result.filter((item) => {
+                        if (tempDfaStates.includes(item)) {
+                          return false;
+                        } else {
+                          return true;
+                        }
+                      });
+
+                      tempDfaStates = [...tempDfaStates, ...result];
+                      console.log("add to tempDfaStates epsolon: ", result);
+                    } else if (transition.transition !== "∅") {
+                      //check existing state
+                      if (!tempDfaStates.includes(transition.transition)) {
+                        tempDfaStates = [
+                          ...tempDfaStates,
+                          transition.transition,
+                        ];
+                        console.log(
+                          "add to tempDfaStates epsolon: ",
+                          transition.transition
+                        );
+                      }
+                    }
+                  }
+                }
+              });
+
+              console.log("tempDfaStates: ", tempDfaStates);
+
+              break;
+            }
+          }
+        }
+
+        //add tempDfaStates to dfaStates
+        let isExist = false;
+        for (let k = 0; k < dfaStates.length; k++) {
+          //problem here: isExist never turns to true
+          if (dfaStates[k].fromNfaStates.length !== tempDfaStates.length)
+            continue;
+
+          isExist = dfaStates[k].fromNfaStates.every((element, index) => {
+            return element === tempDfaStates[index];
+          });
+          console.log("isExist: ", isExist);
+
+          if (isExist) break;
+        }
+
+        if (!isExist) {
+          console.log("**push to dfaStates:", tempDfaStates);
+          dfaStates.push({
+            fromNfaStates: tempDfaStates,
+            name: "q" + dfaStates.length + "'",
+            isStart: false,
+            isEndState: false,
+            transitions: [],
+          });
+        }
+
+        //push transitions to the dfaStates.transitions
+        dfaStates[i].transitions.push({
+          alphabet: alphabet,
+          transition: tempDfaStates.join(","),
+        });
+
+        console.log("transitions", dfaStates[i].transitions);
+      });
+    }
+
+    console.log("dfaStates:", dfaStates);
+  };
+
   return (
     <div>
       <Header />
       <div className="p-6 md:p-12 pb-0 pt-3">
         <Title title="Design Finite Automata" />
+
+        {/* Form to design FA */}
         <FaInputForm
           state={state}
           setState={setState}
@@ -309,6 +525,7 @@ export default function App() {
 
         {state.states !== "" && state.alphabets !== "" && (
           <div>
+            {/* transition table  */}
             <TransitionTable
               state={state}
               transitions={transitions}
@@ -322,9 +539,13 @@ export default function App() {
       </div>
 
       {/* features */}
-      <div className="p-6 md:p-12 pt-0">
+      <div className="p-6 md:p-12 pt-4">
         <Title title="Features" />
-        <FaTypeChecker checkFAType={checkFAType} />
+
+        {/* feature to find if FA is NFA or DFA */}
+        <FaTypeChecker checkFAType={checkFAType} isDFA={isDFA} />
+
+        {/* feature to check if a string is accepted or not */}
         <StringAceptedChecker
           checkStringDFA={checkStringDFA}
           checkStringNFA={checkStringNFA}
@@ -332,6 +553,9 @@ export default function App() {
           setString={setString}
           isDFA={isDFA}
         />
+
+        {/* feature to convert NFA to DFA */}
+        <Converter convertNFAtoDFA={convertNFAtoDFA} />
       </div>
     </div>
   );
