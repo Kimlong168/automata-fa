@@ -8,6 +8,7 @@ import FaTypeChecker from "./components/FaTypeChecker";
 import StringAceptedChecker from "./components/StringAceptedChecker";
 import Title from "./components/title";
 import Converter from "./components/Converter";
+import NfaToDfaTable from "./components/NfaToDfaTable";
 
 export default function App() {
   const [state, setState] = useState({
@@ -21,6 +22,7 @@ export default function App() {
   const [isDFA, setIsDFA] = useState(null);
   const [string, setString] = useState("");
   const [isIncludeEpsolon, setIsIncludeEpsolon] = useState(false);
+  const [DfaToNfa, setDfaToNfa] = useState(null);
   console.log("isIncludeEpsolon: ", isIncludeEpsolon);
   console.log("transitions: ", transitions);
   console.log("state: ", state);
@@ -424,7 +426,7 @@ export default function App() {
 
               //epsolon transition
               //double check here for epsolon transition
-              console.log("epsolon---")
+              console.log("epsolon---");
               transitions.forEach((transition) => {
                 for (let m = 0; m < tempDfaStates.length; m++) {
                   if (
@@ -471,7 +473,6 @@ export default function App() {
         //add tempDfaStates to dfaStates
         let isExist = false;
         for (let k = 0; k < dfaStates.length; k++) {
-          //problem here: isExist never turns to true
           if (dfaStates[k].fromNfaStates.length !== tempDfaStates.length)
             continue;
 
@@ -483,28 +484,66 @@ export default function App() {
           if (isExist) break;
         }
 
+        let dfaTransition = "";
         if (!isExist) {
+          const isEndState = tempDfaStates.some((element) => {
+            return endStates.includes(element);
+          });
+
           console.log("**push to dfaStates:", tempDfaStates);
           dfaStates.push({
             fromNfaStates: tempDfaStates,
             name: "q" + dfaStates.length + "'",
             isStart: false,
-            isEndState: false,
+            isEndState: isEndState,
             transitions: [],
           });
-        }
 
-        //push transitions to the dfaStates.transitions
+          dfaStates.forEach((state) => {
+            if (state.fromNfaStates.length === tempDfaStates.length) {
+              if (
+                state.fromNfaStates.every((element, index) => {
+                  return element === tempDfaStates[index];
+                })
+              ) {
+                dfaTransition = "q" + (dfaStates.length-1) + "'";
+              }
+            }
+          });
+        } else {
+          dfaStates.forEach((state) => {
+            if (state.fromNfaStates.length === tempDfaStates.length) {
+              if (
+                state.fromNfaStates.every((element, index) => {
+                  return element === tempDfaStates[index];
+                })
+              ) {
+                dfaTransition = state.name;
+              }
+            }
+          });
+        }
+        //push transitions to the dfaStates.transitions, but not the above one
         dfaStates[i].transitions.push({
           alphabet: alphabet,
-          transition: tempDfaStates.join(","),
+          transition: dfaTransition,
         });
+
+        //if start state is also a final state
+        if (i == 0) {
+          const isEnd = dfaStates[0].fromNfaStates.some((element) => {
+            return endStates.includes(element);
+          });
+          console.log("isEndState: ", isEnd);
+          dfaStates[0].isEndState = isEnd;
+        }
 
         console.log("transitions", dfaStates[i].transitions);
       });
     }
 
-    console.log("dfaStates:", dfaStates);
+    setDfaToNfa(dfaStates);
+    console.log("DfaToNfa:", dfaStates);
   };
 
   return (
@@ -555,7 +594,18 @@ export default function App() {
         />
 
         {/* feature to convert NFA to DFA */}
-        <Converter convertNFAtoDFA={convertNFAtoDFA} />
+        {!isDFA ? (
+          <Converter convertNFAtoDFA={convertNFAtoDFA} />
+        ) : (
+          <Converter
+            convertNFAtoDFA={() => {
+              alert("This is already a DFA");
+            }}
+          />
+        )}
+        {DfaToNfa && (
+          <NfaToDfaTable DfaToNfa={DfaToNfa} alphabets={alphabets} />
+        )}
       </div>
     </div>
   );

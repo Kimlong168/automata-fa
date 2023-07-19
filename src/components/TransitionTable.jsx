@@ -133,7 +133,7 @@ const TransitionTable = ({
       <table className="border-collapse min-w-full h-full border">
         <thead className="bg-white border-b">
           <tr>
-            <th className="border border-blue-950 p-3 text-center text-orange-400">
+            <th className="border border-blue-500 p-3 text-center text-orange-400">
               Transition
             </th>
             {tableHeader}

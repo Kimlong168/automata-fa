@@ -7,7 +7,7 @@ const Converter = ({convertNFAtoDFA}) => {
         Convert NFA to DFA
       </h1>
       <hr />
-      <Btn handleClick={convertNFAtoDFA} />
+      <Btn handleClick={convertNFAtoDFA} text="Convert"/>
     </div>
   );
 };
