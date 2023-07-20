@@ -7,8 +7,8 @@ const FaInputForm = ({
   setIsDFA,
   isIncludeEpsolon,
   setIsIncludeEpsolon,
+  setDfaToNfa,
 }) => {
-  
   function handleChangeState(e) {
     const { name, value } = e.target;
     setState((prevState) => ({
@@ -30,6 +30,8 @@ const FaInputForm = ({
 
     //reset isDFA to null when state change
     setIsDFA(null);
+    //set dfaToNfa to empty when state change
+    setDfaToNfa(null);
   }
 
   function handleOnSelect(e, type) {
@@ -47,6 +49,9 @@ const FaInputForm = ({
       ...prevState,
       endStates: selectedStates,
     }));
+
+    //set dfaToNfa to empty when state change
+    setDfaToNfa(null);
   }
 
   function handleIncludeEpsolon(e) {
@@ -66,6 +71,8 @@ const FaInputForm = ({
     console.log("include epsilon: ", e.target.value);
     //set transitions to empty when state change
     setTransitions([]);
+    //set converted to null when state change
+    setDfaToNfa(null);
     //reset isDFA to null when state change
     setIsDFA(null);
   }
@@ -131,7 +138,7 @@ const FaInputForm = ({
       </div>
       <div className="flex flex-col gap-2 mt-5">
         <label htmlFor="endStates" className="font-bold text-orange-400">
-          End States
+          Final States
         </label>
         <Multiselect
           showArrow={true}

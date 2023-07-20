@@ -5,6 +5,7 @@ const TransitionTable = ({
   setTransitions,
   setIsDFA,
   isIncludeEpsolon,
+  setDfaToNfa,
 }) => {
   const states = state.states.split(",");
   const alphabets = state.alphabets.split(",");
@@ -56,6 +57,9 @@ const TransitionTable = ({
 
     //reset isDFA to null when transition change
     setIsDFA(null);
+
+    //reset converted to null when transition change
+    setDfaToNfa(null);
   }
 
   const tableHeader = alphabets.map((alphabet) => {
@@ -129,7 +133,7 @@ const TransitionTable = ({
   });
 
   return (
-    <div className="w-full my-5 scroll-bar overflow-x-auto mt-10 shadow-xl">
+    <div className="w-full my-5 scroll-bar overflow-x-auto mt-10 shadow-xl py-3">
       <table className="border-collapse min-w-full h-full border">
         <thead className="bg-white border-b">
           <tr>

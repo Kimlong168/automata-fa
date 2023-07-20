@@ -560,6 +560,7 @@ export default function App() {
           setIsDFA={setIsDFA}
           isIncludeEpsolon={isIncludeEpsolon}
           setIsIncludeEpsolon={setIsIncludeEpsolon}
+          setDfaToNfa={setDfaToNfa}
         />
 
         {state.states !== "" && state.alphabets !== "" && (
@@ -571,6 +572,7 @@ export default function App() {
               setTransitions={setTransitions}
               setIsDFA={setIsDFA}
               isIncludeEpsolon={isIncludeEpsolon}
+              setDfaToNfa={setDfaToNfa}
             />
             {/* <DisplayState state={state} transitions={transitions} /> */}
           </div>
