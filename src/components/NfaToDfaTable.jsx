@@ -18,16 +18,9 @@ const NfaToDfaTable = ({ DfaToNfa, alphabets }) => {
       for (let i = 0; i < state.transitions.length; i++) {
         if (alphabet == state.transitions[i].alphabet) {
           return (
-            <>
-              <td
-                className="border border-blue-500 p-3 text-center"
-                key={index}
-              >
-                {state.transitions[i].transition == ""
-                  ? "∅"
-                  : state.transitions[i].transition}
-              </td>
-            </>
+            <td className="border border-blue-500 p-3 text-center" key={index}>
+              {state.transitions[i].transition}
+            </td>
           );
         }
       }
@@ -80,7 +73,7 @@ const NfaToDfaTable = ({ DfaToNfa, alphabets }) => {
         </svg>
         Table representation (NFA)
       </h1>
-      <div className="w-full my-5 scroll-bar overflow-x-auto mt-10 shadow-xl">
+      <div className="w-full my-5 scroll-bar overflow-x-auto shadow-xl">
         <table className="border-collapse min-w-full h-full border">
           <thead className="bg-white border-b">
             <tr>

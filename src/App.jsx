@@ -23,9 +23,12 @@ export default function App() {
   const [string, setString] = useState("");
   const [isIncludeEpsolon, setIsIncludeEpsolon] = useState(false);
   const [DfaToNfa, setDfaToNfa] = useState(null);
+  const [showResult, setShowResult] = useState(false);
+
   console.log("isIncludeEpsolon: ", isIncludeEpsolon);
   console.log("transitions: ", transitions);
   console.log("state: ", state);
+
   const states = state.states.split(",");
   const alphabets = state.alphabets.split(",");
   const startState = state.startState;
@@ -107,6 +110,7 @@ export default function App() {
     const msg = isDfa();
     if (msg) {
       alert(msg);
+      setShowResult(true);
     }
   }
 
@@ -184,10 +188,11 @@ export default function App() {
     stringArray.forEach((character) => {
       console.log("-------character-------: ", character);
       console.log("start state: ", nfaStates);
+      //we need to delete state from tempStates bcoz we set tempStates = nfaStates, if tempStates = [], we don't need to delete
       tempStates = nfaStates;
 
       // ---------------------------------------------------
-
+      //loop through our initial states (of the character) to find the transition
       let length = nfaStates.length;
       for (let j = 0; j < length; j++) {
         for (let i = 0; i < transitions.length; i++) {
@@ -365,9 +370,8 @@ export default function App() {
         console.log("---aphabet---: ", alphabet);
         console.log("start dfaStates: ", dfaStates[i].fromNfaStates);
 
-        let tempDfaStates = dfaStates[i].fromNfaStates;
-        // let tempDfaStates = [];
-        // let tempDfaTransitions = dfaStates[i].transitions;
+        // let tempDfaStates = dfaStates[i].fromNfaStates; no need this line
+        let tempDfaStates = [];
 
         for (let j = 0; j < dfaStates[i].fromNfaStates.length; j++) {
           for (let n = 0; n < transitions.length; n++) {
@@ -376,29 +380,12 @@ export default function App() {
               dfaStates[i].fromNfaStates[j] == transitions[n].state &&
               alphabet == transitions[n].alphabet
             ) {
-              //delete the old state
-
-              let time = 0;
-              tempDfaStates = tempDfaStates.filter((item) => {
-                if (item === dfaStates[i].fromNfaStates[j] && time === 0) {
-                  time++;
-                  return false;
-                } else {
-                  return true;
-                }
-              });
-
-              console.log("delete", dfaStates[i].fromNfaStates[j]);
-
               //add new state
               if (transitions[n].transition.includes(",")) {
                 let result = transitions[n].transition.split(",");
                 //check existing state
                 result = result.filter((item) => {
-                  if (
-                    tempDfaStates.includes(item) &&
-                    !dfaStates[i].fromNfaStates.includes(item)
-                  ) {
+                  if (tempDfaStates.includes(item)) {
                     return false;
                   } else {
                     return true;
@@ -408,14 +395,7 @@ export default function App() {
                 console.log("add to tempDfaStates: ", result);
               } else if (transitions[n].transition !== "∅") {
                 //check existing state
-                if (
-                  !(
-                    tempDfaStates.includes(transitions[n].transition) &&
-                    !dfaStates[i].fromNfaStates.includes(
-                      transitions[n].transition
-                    )
-                  )
-                ) {
+                if (!tempDfaStates.includes(transitions[n].transition)) {
                   tempDfaStates = [...tempDfaStates, transitions[n].transition];
                   console.log(
                     "add to tempDfaStates: ",
@@ -425,7 +405,6 @@ export default function App() {
               }
 
               //epsolon transition
-              //double check here for epsolon transition
               console.log("epsolon---");
               transitions.forEach((transition) => {
                 for (let m = 0; m < tempDfaStates.length; m++) {
@@ -470,21 +449,28 @@ export default function App() {
           }
         }
 
+        //problem here
         //add tempDfaStates to dfaStates
         let isExist = false;
         for (let k = 0; k < dfaStates.length; k++) {
           if (dfaStates[k].fromNfaStates.length !== tempDfaStates.length)
             continue;
 
-          isExist = dfaStates[k].fromNfaStates.every((element, index) => {
-            return element === tempDfaStates[index];
-          });
-          console.log("isExist: ", isExist);
+          console.log("-------------------------------------------------");
+          console.log("dfa", dfaStates[k].fromNfaStates);
+          console.log("temp", tempDfaStates);
+          const sortedArr1 = dfaStates[k].fromNfaStates.slice().sort();
+          const sortedArr2 = tempDfaStates.slice().sort();
 
+          isExist = sortedArr1.every(
+            (element, index) => element === sortedArr2[index]
+          );
+
+          console.log("-------------------------------------------------");
           if (isExist) break;
         }
-
-        let dfaTransition = "";
+        console.log("isExist: ", isExist);
+        let dfaTransition = "jjj";
         if (!isExist) {
           const isEndState = tempDfaStates.some((element) => {
             return endStates.includes(element);
@@ -501,28 +487,33 @@ export default function App() {
 
           dfaStates.forEach((state) => {
             if (state.fromNfaStates.length === tempDfaStates.length) {
+              const sortedArr1 = state.fromNfaStates.slice().sort();
+              const sortedArr2 = tempDfaStates.slice().sort();
               if (
-                state.fromNfaStates.every((element, index) => {
-                  return element === tempDfaStates[index];
-                })
+                sortedArr1.every(
+                  (element, index) => element === sortedArr2[index]
+                )
               ) {
-                dfaTransition = "q" + (dfaStates.length-1) + "'";
+                dfaTransition = "q" + (dfaStates.length - 1) + "'";
               }
             }
           });
         } else {
           dfaStates.forEach((state) => {
             if (state.fromNfaStates.length === tempDfaStates.length) {
+              const sortedArr1 = state.fromNfaStates.slice().sort();
+              const sortedArr2 = tempDfaStates.slice().sort();
               if (
-                state.fromNfaStates.every((element, index) => {
-                  return element === tempDfaStates[index];
-                })
+                sortedArr1.every(
+                  (element, index) => element === sortedArr2[index]
+                )
               ) {
                 dfaTransition = state.name;
               }
             }
           });
         }
+
         //push transitions to the dfaStates.transitions, but not the above one
         dfaStates[i].transitions.push({
           alphabet: alphabet,
@@ -540,6 +531,7 @@ export default function App() {
 
         console.log("transitions", dfaStates[i].transitions);
       });
+
     }
 
     setDfaToNfa(dfaStates);
@@ -584,7 +576,11 @@ export default function App() {
         <Title title="Features" />
 
         {/* feature to find if FA is NFA or DFA */}
-        <FaTypeChecker checkFAType={checkFAType} isDFA={isDFA} />
+        <FaTypeChecker
+          checkFAType={checkFAType}
+          isDFA={isDFA}
+          showResult={showResult}
+        />
 
         {/* feature to check if a string is accepted or not */}
         <StringAceptedChecker
