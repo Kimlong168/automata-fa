@@ -19,7 +19,7 @@ const About = () => {
       <br />
       <div id="team" className="section relative pb-8 bg-white">
         <header>
-          <h1 className="text-5xl text-orange-500 font-bold text-center py-6 pb-10 uppercase">
+          <h1 className="text-3xl md:text-5xl text-orange-500 font-bold text-center py-6 pb-10 uppercase">
             Our Project Memebers
           </h1>
         </header>
@@ -28,7 +28,7 @@ const About = () => {
             {memberList}
           </div>
         </div>
-        <footer className="px-10 w-1/2 mx-auto text-blue-950">
+        <footer className="px-10 md:w-1/2 mx-auto text-blue-950">
           <marquee direction="left">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque
             exercitationem at doloribus. Nisi veritatis sint fugiat, delectus

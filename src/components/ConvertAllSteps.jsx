@@ -75,6 +75,10 @@ const ConvertAllSteps = ({ DfaToNfa, alphabets }) => {
   return (
     <>
       <div className="scroll-bar overflow-x-auto font-semibold">
+        <legend className="text-red-500 mb-3">
+          ➡️ We have {DfaToNfa[0].name} ={" "}
+          <span>&#123;{DfaToNfa[0].fromNfaStates.join(",")}&#125;</span>
+        </legend>
         <table>{stepLists}</table>
       </div>
     </>
