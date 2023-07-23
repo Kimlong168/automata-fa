@@ -9,6 +9,8 @@ import StringAceptedChecker from "./components/StringAceptedChecker";
 import Title from "./components/title";
 import Converter from "./components/Converter";
 import NfaToDfaTable from "./components/NfaToDfaTable";
+import ConvertAllSteps from "./components/ConvertAllSteps";
+import Minimize from "./components/Minimize";
 
 export default function App() {
   const [state, setState] = useState({
@@ -325,7 +327,7 @@ export default function App() {
     }
   };
 
-  //---------------------------------convert NFA to DFA--------------------------
+  //---------------------------convert NFA to DFA----------------------
   const convertNFAtoDFA = () => {
     //to make sure all fields are filled
     //to find if the FA is DFA or NFA
@@ -355,6 +357,7 @@ export default function App() {
       name: "q0'",
       isStart: true,
       isEndState: false,
+      nfaToDfaTransitions: [],
       transitions: [],
     });
 
@@ -482,6 +485,7 @@ export default function App() {
             name: "q" + dfaStates.length + "'",
             isStart: false,
             isEndState: isEndState,
+            nfaToDfaTransitions: [],
             transitions: [],
           });
 
@@ -520,6 +524,12 @@ export default function App() {
           transition: dfaTransition,
         });
 
+        //push transitions to the original transition
+        dfaStates[i].nfaToDfaTransitions.push({
+          alphabet: alphabet,
+          transition: tempDfaStates.join(","),
+        });
+
         //if start state is also a final state
         if (i == 0) {
           const isEnd = dfaStates[0].fromNfaStates.some((element) => {
@@ -531,11 +541,17 @@ export default function App() {
 
         console.log("transitions", dfaStates[i].transitions);
       });
-
     }
 
     setDfaToNfa(dfaStates);
     console.log("DfaToNfa:", dfaStates);
+  };
+
+  //---------------------------------minimize--------------------------
+  const minimize = () => {
+    //to make sure all fields are filled
+    //to find if the FA is DFA or NFA
+    if (!isDfa()) return;
   };
 
   return (
@@ -602,8 +618,14 @@ export default function App() {
           />
         )}
         {DfaToNfa && (
-          <NfaToDfaTable DfaToNfa={DfaToNfa} alphabets={alphabets} />
+          <>
+            <ConvertAllSteps DfaToNfa={DfaToNfa} alphabets={alphabets} />
+            <NfaToDfaTable DfaToNfa={DfaToNfa} alphabets={alphabets} />
+          </>
         )}
+
+        {/* feature to minimize DFA */}
+        <Minimize minimize={minimize} />
       </div>
     </div>
   );

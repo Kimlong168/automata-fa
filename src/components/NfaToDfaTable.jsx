@@ -5,7 +5,7 @@ const NfaToDfaTable = ({ DfaToNfa, alphabets }) => {
     if (alphabet === "") return null;
     return (
       <>
-        <th className="border border-blue-500 p-3 text-center">{alphabet}</th>
+        <th key={alphabet} className="border border-blue-500 p-3 text-center">{alphabet}</th>
       </>
     );
   });
@@ -18,7 +18,7 @@ const NfaToDfaTable = ({ DfaToNfa, alphabets }) => {
       for (let i = 0; i < state.transitions.length; i++) {
         if (alphabet == state.transitions[i].alphabet) {
           return (
-            <td className="border border-blue-500 p-3 text-center" key={index}>
+            <td className="border border-blue-500 p-3 text-center" key={alphabet}>
               {state.transitions[i].transition}
             </td>
           );
@@ -27,7 +27,7 @@ const NfaToDfaTable = ({ DfaToNfa, alphabets }) => {
 
       return (
         <>
-          <td className="border border-blue-500 p-3 text-center" key={index}>
+          <td className="border border-blue-500 p-3 text-center" key={alphabet}>
             nothing
           </td>
         </>
