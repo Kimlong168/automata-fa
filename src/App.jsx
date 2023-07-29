@@ -452,7 +452,6 @@ export default function App() {
           }
         }
 
-        //problem here
         //add tempDfaStates to dfaStates
         let isExist = false;
         for (let k = 0; k < dfaStates.length; k++) {
@@ -473,7 +472,7 @@ export default function App() {
           if (isExist) break;
         }
         console.log("isExist: ", isExist);
-        let dfaTransition = "jjj";
+        let dfaTransition = "";
         if (!isExist) {
           const isEndState = tempDfaStates.some((element) => {
             return endStates.includes(element);

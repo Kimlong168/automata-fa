@@ -9,16 +9,16 @@ const MemberCard = ({name, position,image}) => {
         <div className="relative overflow-hidden px-6">
           <img
             src={image}
-            className="max-w-full h-auto mx-auto rounded-full bg-gray-50 grayscale"
+            className="max:w-full h-auto mx-auto rounded-full bg-gray-50 grayscale"
           />
         </div>
         <div className="pt-6 text-center">
           <p className="text-lg leading-normal font-bold mb-1 text-orange-400">
             {name}
           </p>
-          <p className="text-gray-500 leading-relaxed font-light">
+          {/* <p className="text-gray-500 leading-relaxed font-light">
             {position}
-          </p>
+          </p> */}
 
           <div className="mt-2 mb-5 space-x-2">
             <a

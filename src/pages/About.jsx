@@ -1,9 +1,8 @@
 import Header from "../components/Header";
 import MemberCard from "../components/MemberCard";
 import members from "../memberData";
-
+import RunningText from "../components/RunningText";
 const About = () => {
-  
   const memberList = members.map((member) => (
     <MemberCard
       key={member.id}
@@ -30,10 +29,7 @@ const About = () => {
         </div>
         <footer className="px-10 md:w-1/2 mx-auto text-blue-950">
           <marquee direction="left">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque
-            exercitationem at doloribus. Nisi veritatis sint fugiat, delectus
-            accusamus, magnam laborum ex rem ducimus laboriosam similique
-            doloremque id voluptatem quasi numquam.
+            <RunningText />
           </marquee>
         </footer>
       </div>
